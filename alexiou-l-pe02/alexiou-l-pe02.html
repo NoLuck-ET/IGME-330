@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta charset="utf-8" />
+    <title>Greeter</title>
+    <style>
+      *{font-size:1.5em;}
+      button {width: 100; height: 50; font-size: 14pt;}
+      @media only screen and (min-width: 1024px){
+				body{
+					background-color: red;
+					padding: 100px;
+				}
+      }
+      #output{
+        font-family: 'Share Tech Mono', monospace;
+        font-weight:normal;
+      }
+      label{
+        font-size: 0.8rem;
+      }
+    </style>
+    <script>
+      "use strict"
+      
+      window.addEventListener("load", init);
+      //window.onload = init();
+      //window.onload = function(){};
+  
+      // 3 - create a `sayHello()` function
+      function greet(greeting){
+        let firstName = document.querySelector("#input-firstname").value.trim();
+        let lastName = document.querySelector("#input-lastname").value.trim();
+        firstName = firstName || "Peter";
+        lastName = lastName || "Parker";
+
+        let output = document.querySelector("#output");
+        output.innerHTML = `${greeting} ${firstName} ${lastName}`;
+      }
+  
+      function init(){
+        //// 1 - get a reference to the button
+        const buttonH = document.querySelector("#hello");
+        const buttonG = document.querySelector("#goodbye");
+        //// 2 - add a click event to button that calls a `sayHello` function
+        //buttonH.addEventListener("click", sayHello);
+        buttonH.onclick = function(){
+          greet("Hello there");
+        };
+        buttonG.onclick = function(){
+          greet("See ya");
+        };
+        //buttonG.addEventListener("click", sayGoodBye);
+        // p {background-color: yellow; color: red;}
+        output.style.backgroundColor = "yellow";
+        output.style.color = "red";
+      }
+
+
+
+      </script>
+  </head>
+<body>
+  <button id="hello">Say Hello</button>
+  <button id="goodbye">Say Goodbye</button>
+  <input type="checkbox" id="shoutify" name="shoutify">
+  <label>Shoutify!</label>
+  <br>
+  <input id="input-firstname" placeholder="Type in your first name">
+  <input id="input-lastname" placeholder="Type in your last name">
+  <p id="output">???</p>
+</body>
+
+</html>
