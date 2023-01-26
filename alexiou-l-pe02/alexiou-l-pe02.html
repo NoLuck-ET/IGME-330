@@ -20,7 +20,7 @@
         font-weight:normal;
       }
       label{
-        font-size: 0.8rem;
+        font-size: 1rem;
       }
     </style>
     <script>
@@ -30,31 +30,59 @@
       //window.onload = init();
       //window.onload = function(){};
   
-      // 3 - create a `sayHello()` function
+      /*
+      greet: Updates the content of the output based on default
+      name values and a pre-given introductory statement by 
+      either button.
+      */
       function greet(greeting){
+        //get a reference to each input section & trim
         let firstName = document.querySelector("#input-firstname").value.trim();
         let lastName = document.querySelector("#input-lastname").value.trim();
+        // establish defaults
         firstName = firstName || "Peter";
         lastName = lastName || "Parker";
 
+        //update output
         let output = document.querySelector("#output");
         output.innerHTML = `${greeting} ${firstName} ${lastName}`;
       }
+
+      /*
+      Shoutify: Uses the .checked property of a checkbox to 
+      determine if the text should be capitalized or normal.
+      */
+      function shoutify(checkbox){
+        //if box is checked, capitalize
+        if(checkbox.checked)
+        {
+          let output = document.querySelector("#output").style.textTransform = "uppercase";
+        }else // if not, return to normal
+        {
+          let output = document.querySelector("#output").style.textTransform = "none";
+        }
+      }
   
+      /*
+      Init: Estabishes some content, function call conditions, 
+      and variables on page load.
+      */
       function init(){
-        //// 1 - get a reference to the button
+        //get a reference to the buttons
         const buttonH = document.querySelector("#hello");
         const buttonG = document.querySelector("#goodbye");
-        //// 2 - add a click event to button that calls a `sayHello` function
-        //buttonH.addEventListener("click", sayHello);
+        const checkBox = document.querySelector("#shoutify");
+        //Calls a method when the buttons are clicked
         buttonH.onclick = function(){
           greet("Hello there");
         };
         buttonG.onclick = function(){
           greet("See ya");
         };
-        //buttonG.addEventListener("click", sayGoodBye);
-        // p {background-color: yellow; color: red;}
+        checkBox.onchange = function(){
+          shoutify(checkBox);
+        };
+        //Changes the style of the content
         output.style.backgroundColor = "yellow";
         output.style.color = "red";
       }
@@ -67,7 +95,7 @@
   <button id="hello">Say Hello</button>
   <button id="goodbye">Say Goodbye</button>
   <input type="checkbox" id="shoutify" name="shoutify">
-  <label>Shoutify!</label>
+  <label for="shoutify">Shoutify!</label>
   <br>
   <input id="input-firstname" placeholder="Type in your first name">
   <input id="input-lastname" placeholder="Type in your last name">
