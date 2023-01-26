@@ -25,49 +25,12 @@
     </style>
     <script>
       "use strict"
-      
-      window.addEventListener("load", init);
-      //window.onload = init();
-      //window.onload = function(){};
-  
-      /*
-      greet: Updates the content of the output based on default
-      name values and a pre-given introductory statement by 
-      either button.
-      */
-      function greet(greeting){
-        //get a reference to each input section & trim
-        let firstName = document.querySelector("#input-firstname").value.trim();
-        let lastName = document.querySelector("#input-lastname").value.trim();
-        // establish defaults
-        firstName = firstName || "Peter";
-        lastName = lastName || "Parker";
 
-        //update output
-        let output = document.querySelector("#output");
-        output.innerHTML = `${greeting} ${firstName} ${lastName}`;
-      }
-
-      /*
-      Shoutify: Uses the .checked property of a checkbox to 
-      determine if the text should be capitalized or normal.
-      */
-      function shoutify(checkbox){
-        //if box is checked, capitalize
-        if(checkbox.checked)
-        {
-          let output = document.querySelector("#output").style.textTransform = "uppercase";
-        }else // if not, return to normal
-        {
-          let output = document.querySelector("#output").style.textTransform = "none";
-        }
-      }
-  
       /*
       Init: Estabishes some content, function call conditions, 
       and variables on page load.
       */
-      function init(){
+      const init = () => {
         //get a reference to the buttons
         const buttonH = document.querySelector("#hello");
         const buttonG = document.querySelector("#goodbye");
@@ -86,9 +49,41 @@
         output.style.backgroundColor = "yellow";
         output.style.color = "red";
       }
+      
+      window.addEventListener("load", init);
+  
+      /*
+      greet: Updates the content of the output based on default
+      name values and a pre-given introductory statement by 
+      either button.
+      */
+      const greet = (greeting) => {
+        //get a reference to each input section & trim
+        let firstName = document.querySelector("#input-firstname").value.trim();
+        let lastName = document.querySelector("#input-lastname").value.trim();
+        // establish defaults
+        firstName = firstName || "Peter";
+        lastName = lastName || "Parker";
 
+        //update output
+        let output = document.querySelector("#output");
+        output.innerHTML = `${greeting} ${firstName} ${lastName}`;
+      }
 
-
+      /*
+      Shoutify: Uses the .checked property of a checkbox to 
+      determine if the text should be capitalized or normal.
+      */
+      const shoutify = (checkbox) => {
+        //if box is checked, capitalize
+        if(checkbox.checked)
+        {
+          let output = document.querySelector("#output").style.textTransform = "uppercase";
+        }else // if not, return to normal
+        {
+          let output = document.querySelector("#output").style.textTransform = "none";
+        }
+      }
       </script>
   </head>
 <body>
