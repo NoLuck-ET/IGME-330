@@ -36,13 +36,13 @@
         const buttonG = document.querySelector("#goodbye");
         const checkBox = document.querySelector("#shoutify");
         //Calls a method when the buttons are clicked
-        buttonH.onclick = function(){
+        buttonH.onclick = () => {
           greet("Hello there");
         };
-        buttonG.onclick = function(){
+        buttonG.onclick = () => {
           greet("See ya");
         };
-        checkBox.onchange = function(){
+        checkBox.onchange = () => {
           shoutify(checkBox);
         };
         //Changes the style of the content
