@@ -1,0 +1,140 @@
+h1{
+    font-family: 'Aboreto', cursive
+}
+body{
+    font-family: monospace;
+}
+
+#output{
+    font-size: 200%;
+}
+
+#btn-gen-1{
+    width: 200px;
+    height: 50pt;
+    font-size: 15pt;
+}
+
+@media only screen and (min-width: 240px){
+    .container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    #btn-gen-5{
+        display: none;
+    }
+
+    html, body, .container{
+        height: 100%;
+        margin: 0;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        background-color: #33ab00;
+        color: #F5F5F5;
+        padding: 0.8rem;
+        margin: 0;
+        text-align: center;
+    }
+
+    body{
+        font-size: 0.6rem;
+    }
+
+    #output{
+        text-align: center;
+        padding: 0.5rem;
+    }
+}
+
+@media only screen and (min-width: 320px){
+    .container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    html, body, .container{
+        height: 100%;
+        margin: 0;
+    }
+
+    h1 {
+        font-size: 2rem;
+        background-color: #174287;
+        color: #F5F5F5;
+        padding: 0.8rem;
+        margin: 0;
+        text-align: center;
+    }
+
+    #output{
+        text-align: center;
+    }
+
+    body{
+        font-size: 0.8rem;
+    }
+}
+
+@media only screen and (min-width: 768px){
+    h1{
+        font-size: 3rem;
+        background-color: #23D160;
+    }
+
+    #btn-gen-1{
+        width: 300px;
+        height: 75pt;
+        font-size: 1.5rem;
+    }
+
+    body{
+        color: darkgray;
+        font-size: 2rem;
+    }
+}
+
+@media only screen and (min-width: 1024px){
+    body{
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    h1{
+        background-color: #FF3760;
+    }
+
+    .container {
+        display: block;
+        margin: 1rem;
+    }
+
+    #output{
+        text-align: left;
+    }
+}
+
+@media only screen and (min-width: 1408px){
+    
+    #btn-gen-5{
+        display: inline-block;
+        width: 300px;
+        height: 75pt;
+        font-size: 1.5rem;
+    }
+
+    h1{
+        background-color: #37ffd4;
+    }
+    
+    #output{
+        white-space: pre-line;
+        color: black;
+    }
+}
