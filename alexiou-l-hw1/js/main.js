@@ -1,10 +1,6 @@
 // Imports everything - uses namespace
 import * as utils from "./utils.js";
 
-window.onload = () => {
-    loadBabble();
-};
-
 //declares variables. Not in init due to scope
 let words1 = [];
 let words2 = [];
@@ -63,6 +59,10 @@ const generateTechno = (num) =>{
     }
 };
 
+//actually initialize the page once everything is loaded
+loadBabble();
+
+
 /*
 Init: Called upon loading the page, it sets up the javascript
     for use. Prevents errors by assuring HTML is loaded first, 
@@ -71,5 +71,5 @@ Input: none
 Output: none
 */
 // const init = () => {
-//     loadBabble();           //------- Comented out since it is now a middleman due to loadBabble & babbleLoaded functions.
+//     loadBabble();      //------- Comented out since it is now a middleman due to loadBabble & babbleLoaded functions.
 // };
