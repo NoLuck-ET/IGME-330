@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<title>XHR - Load JSON</title>
+	<style>
+	body{
+	  font-family: sans-serif;
+	}
+	</style>
+
+</head>
+<body>
+	<h2>XHR - Load JSON</h2>
+	<hr>
+	<button id="my-button">Load Data</button>
+	<p id="output">Click button to load</p>
+	
+
+<script>
+    document.querySelector("#my-button").onclick = loadJsonXHR;
+
+    function loadJsonXHR(){
+        const url = "data/simple-pet-names.json";
+        const xhr = new XMLHttpRequest();
+        xhr.onload = (e) => {
+            console.log(`In onload - HTTP Status Code = ${e.target.status}`);
+            const string = e.target.responseText;
+
+            let json
+            try{
+                json = JSON.parse(string);
+            }catch(err){
+                console.log(`Error: ${err}`);
+                document.querySelector("#output").innerHTML = "JSON ERROR";
+                return;
+            }
+
+            // const dogNames = json["dogNames"];
+            const dogNames = json.dogNames;
+            const catNames = json.catNames;
+            const birdNames = json.birdNames;
+
+            const dogHtml = `<ol>${dogNames.map(w => `<li>${w}</li>`).join("")}</ol>`;
+            const catHtml = `<ol>${catNames.map(w => `<li>${w}</li>`).join("")}</ol>`;
+            const birdHtml = `<ol>${birdNames.map(w => `<li>${w}</li>`).join("")}</ol>`;
+
+            const html = `
+                <h3>Dog Names</h3>
+                ${dogHtml}
+                <h3>Cat Names</h3>
+                ${catHtml}
+                <h3>Bird Names</h3>
+                ${birdHtml}
+            `;
+			document.querySelector("#output").innerHTML = html;
+            document.querySelector("h2").innerHTML = json.appTitle || "Pet name finder"; // The "||" means that the default will only become real if a falsey value is the primary
+        };
+        xhr.onerror = e => console.log(`In onerror - HTTP Status Code = ${e.target.status}`);
+        xhr.open("GET",url);
+        xhr.send();
+    }
+</script>
+</body>
+</html>
