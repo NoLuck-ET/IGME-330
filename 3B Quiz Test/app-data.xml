@@ -1,0 +1,5 @@
+<?xml version=“1.0” encoding=“UTF-8”?>
+<greeter-data>
+	<title>Greeter</title>
+	<list cid=“greetings”>Hello,Hiya,Hi,Hey there,Wazaahh,What’s up</list>
+</greeter-data>
