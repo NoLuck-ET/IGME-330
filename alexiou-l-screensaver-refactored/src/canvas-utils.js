@@ -1,3 +1,5 @@
+import { getRandomColor, getRandomInt } from "./utils.js";
+
 // canvas helpers
 export const drawRectangle = (ctx,x,y,width,height,fillStyle="black",lineWidth=0,strokeStyle="black") => {
     ctx.save(); // imediatly saves stack state so that the function can later load a previous state.
