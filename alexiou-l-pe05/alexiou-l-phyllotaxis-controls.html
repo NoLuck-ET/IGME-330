@@ -3,14 +3,20 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Phyllotaxis</title>
-	<style>canvas{ border: 1px solid black; }</style>
+	<style>
+		canvas{ border: 1px solid black; }
+		input{
+			size: 5rem;
+		}
+	</style>
 	<script>
 	"use strict";
-	const canvasWidth = 400, canvasHeight = 300;
+	const canvasWidth = 640, canvasHeight = 480;
 	let ctx;
 	let n = 0;
 	let divergence = 137.5; //137.5 // 31 also looks pretty cool //43
-	const c = 3;
+	let c = 3;
+	let petalSize = 2;
 
 	function init(){
 		ctx = canvas.getContext("2d");
@@ -18,7 +24,7 @@
 		canvas.height = canvasHeight;
 		ctx.fillRect(0,0,canvasWidth,canvasHeight);
 		document.querySelector("#restart").onclick = clear;
-		document.querySelector("#user-divergence").onchange = changeDivergence;
+		document.querySelector("#user-divergence").onchange = updateInput;
 		loop();
 	}
 
@@ -43,9 +49,11 @@
 		//let color = `rgb(${aDegrees},0,255)`; // changes color based on angle - between magenta and blue
 		//let color = `rgb(${n % 256},0,255)`; // Changes color based on distance
 		let color = `hsl(${n/5 % 361},100%,50%)`; // slowly ramp the hue based on the value of 'n'
-		drawCircle(ctx,x,y,2,color);
+		drawCircle(ctx,x,y,petalSize,color);
 		
     	n++;
+		c += 0.01;
+		petalSize += 0.015;
 	}
 
 
@@ -58,14 +66,16 @@
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,canvasWidth,canvasHeight);
 		n = 0;
+		c = 3;
+		petalSize = 2;
 	}
 
-	function changeDivergence(){
-		let temp = document.querySelector("#user-divergence").value.trim();
-		if(isNaN(temp)){
+	function updateInput(){
+		let tempDivergence = document.querySelector("#user-divergence").value.trim();
+		if(isNaN(tempDivergence)){
 			return;
 		}
-		divergence = temp;
+		divergence = tempDivergence;
 	}
 
 	function drawCircle(ctx,x,y,radius,color){
@@ -82,17 +92,21 @@
 
 	</script>
 </head>
+
 <body>
 <canvas id="canvas"></canvas>
 <br>
 <button id="restart">Restart</button>
-&emsp; &emsp; &emsp; &emsp;
+&emsp;
 Divergence: 
-<input id="user-divergence" placeholder="137.5">
+<input size="3" id="user-divergence" placeholder="137.5">
 <br>
 <div>
-	Features:
-	<li>#2 Stuff [to be added]</li>
+	<h2>Features:</h2>
+	<h3>Part 2:</h3>
+	<li>Gap between petals starts at 3 and increases slowly.</li>
+	<li>size of petals starts at 2 and increases slowly.</li>
+	<h3>Part 3:</h3>
 	<li>Restart button clears the canvas and begins the loop over again utilizing current divergence.</li>
 	<li>Divercence input allows the user to use a custom divergence number of their choice. 
 		<br> &emsp;If an invalid input is given, the divergence value will remain unchanged.</li>
