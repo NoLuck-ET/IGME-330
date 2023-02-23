@@ -96,7 +96,7 @@ let gate = true;
 
 //helpers
 const setupUI = () => {
-    document.querySelector("#btn-pause").onclick = function(){
+    document.querySelector("#btn-pause").onclick = () => {
         paused = true;
         gate = false;
     };
