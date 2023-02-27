@@ -8,45 +8,73 @@
 	
 	"use strict";
 	const canvasWidth = 640, canvasHeight = 480;
-	let n = 0;
+	//let n;
 	const divergence = 137.5;
 	const c = 4;
+	let phyllo1;
+	let phyllo2;
 	
 	let ctx;
+	let sprites = [];
+
+	class PhylloFlower{
+		constructor(centerX, centerY, divergence, c){
+			console.log(`PhylloFlower created at ${centerX}, ${centerY}`);
+			this.n = 0;
+			this.centerX = centerX;
+			this.centerY = centerY;
+			this.divergence = divergence;
+			this.c = c;
+
+		}
+
+		// helpers
+		dtr(degrees){
+			return degrees * (Math.PI/180);
+		}
+
+		drawCircle(ctx,x,y,radius,color){
+			ctx.save();
+			ctx.fillStyle = color;
+			ctx.beginPath();
+			ctx.arc(x,y,radius,0,Math.PI * 2);
+			ctx.closePath();
+			ctx.fill();
+			ctx.restore();
+		}
+
+		draw(ctx){
+			//console.log("drawing");
+			let a = this.n * this.dtr(this.divergence);
+			let r = this.c * Math.sqrt(this.n);
+			let x = r * Math.cos(a) + this.centerX;
+			let y = r * Math.sin(a) + this.centerY;
+			let color = `hsl(${this.n/5 % 361},100%,50%)`;
+			this.drawCircle(ctx,x,y,2,color);
+            this.n++;
+			//draw
+		}
+	}
 
 	function init(){
 		ctx = canvas.getContext("2d");
 		canvas.width = canvasWidth;
 		canvas.height = canvasHeight;
 		ctx.fillRect(0,0,canvasWidth,canvasHeight);
+		phyllo1 = new PhylloFlower(200, 200, 137.5, 4);
+        phyllo2 = new PhylloFlower(450, 200, 137.1, 3);
+		sprites = [phyllo1, phyllo2];
 		loop();
 	}
 	
 	function loop(){
-                setTimeout(loop,1000/30);
-		let a = n * dtr(divergence);
-		let r = c * Math.sqrt(n);
-		let x = r * Math.cos(a) + canvasWidth/2;
-		let y = r * Math.sin(a) + canvasHeight/2;
-		let color = `hsl(${n/5 % 361},100%,50%)`;
-		drawCircle(ctx,x,y,2,color);
-                n++;
-	}
-
-
-	// helpers
-	function dtr(degrees){
-		return degrees * (Math.PI/180);
-	}
-
-	function drawCircle(ctx,x,y,radius,color){
-		ctx.save();
-		ctx.fillStyle = color;
-		ctx.beginPath();
-		ctx.arc(x,y,radius,0,Math.PI * 2);
-		ctx.closePath();
-		ctx.fill();
-		ctx.restore();
+		setTimeout(loop,1000/60);
+        for(let p of sprites){
+            //p.update();
+        }
+		phyllo1.draw(ctx);
+		phyllo2.draw(ctx);
+		
 	}
 	
 	window.onload = init;

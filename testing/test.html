@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Random Canvas Stuff</title>
+	<style>
+	canvas{
+		border:1px solid gray;
+	}
+	</style>
+	<script>
+		//=-------------IMPORTANT
+		const values = [false, 0, -0, undefined, null, NaN, "", '', ``, 0n, 0.0, true, "Ace Coder", 0.00000000000001, "0"];
+		for (let value of values){
+		if(value){
+			console.log(`${value} is true`);
+		}else{
+			console.log(`${value} is false`);
+		}
+		}
+		console.log("-----------\n-----------");
+
+		//=-------------IMPORTANT
+		const expressions = ["2 + 2", "2 + 'two'", "2 * 'two'", "2 + undefined", "2 * undefined", "Math.sqrt(-1)"];
+		for (let exp of expressions){
+		let result = eval(exp); // eval()!
+		if(isNaN(result)){
+			console.log(`exp = ${exp}. result = ${result} - this evaluates to NaN`);
+		}else{
+		console.log(`exp = ${exp}. result = ${result} - this is a Number`);
+		}
+		}
+		console.log("-----------\n-----------");
+
+		//=-------------IMPORTANT
+		// Equality
+		console.log(1 == 1); // true
+		console.log('hello' == 'hello'); // true
+		console.log('1' ==  1); // true because JS converts '1' to a Number before doing the comparison
+		console.log(0 == false); // true because JS converts 0 to a Boolean before doing the comparison
+
+		// Strict Equality
+		console.log(1 === 1); // true
+		console.log('hello' === 'hello'); // true
+		console.log('1' ===  1); // false
+		console.log(0 === false); // false
+		console.log("-----------\n-----------");
+
+		//=-------------IMPORTANT
+	</script>
+</head>
+<body>
+	<canvas width="640" height="480">
+		Get a real browser!
+	</canvas>
+</body>
+</html>
