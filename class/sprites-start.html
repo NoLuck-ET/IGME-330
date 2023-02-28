@@ -15,13 +15,18 @@
 
         class CircleSprite{
             static type = "arc"; // demoing a static (class) variable here
-            constructor(x,y,radius,color){
+            constructor({x=0,y=0,radius=10,color="white"} = {}){ // - Uses destructuring to create defaults, as well as a default for the entire thing
                 console.log(`${this.constructor.type} created`); // access static property (alternatively, CircleSprite.type)
                 // YOU DO THIS - initialize .x, .y, .radius and .color properties
                 this.x = x;
                 this.y = y;
                 this.radius = radius;
                 this.color = color;
+                //or
+                //Object.assign(this,{x,y,radius,color});
+                //or
+                //Object.assign(this,{x:x,y:y,radius:radius,color:color}); // connects name to variable - should onyl be used if variable and its name are different
+                return Object.seal(this); // No longer able to add properties
             }
             
             update(){
@@ -54,20 +59,43 @@
                 c.update();
                 c.draw(ctx);
             }
-            // greenCircle.update();
-            // greenCircle.draw(ctx);
-            // redCircle.update();
-            // redCircle.draw(ctx);
+            
+            // // Another way
+            /*sprites.forEach(s => {
+                s.update();
+                s.draw(ctx);
+            });*/
         }
         
         const init = () => {
             ctx = canvas.getContext("2d");
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
-            greenCircle = new CircleSprite(100, 100, 20, 'green');
-            redCircle = new CircleSprite(100, 200, 30, 'red');
-            sprites = [redCircle, greenCircle];
+            //greenCircle = new CircleSprite(100, 100, 20, 'green');
+            //redCircle = new CircleSprite(100, 200, 30, 'red');
+            //sprites = [redCircle, greenCircle];
+
+            //or
+
+            //sprites.push(redCircle);
+            //sprites.push(greenCircle);
+
+            //or
+
+            sprites.push(new CircleSprite({
+                x: 100,
+                y: 200,
+                radius: 30,
+                color: "red"
+            }));
+            sprites.push(new CircleSprite({
+                x: 100,
+                y: 100,
+                radius: 20,
+                color: "green"
+            }));
             loop();
+            sprites.push(new CircleSprite({}));
         };
         
         window.onload = init;
