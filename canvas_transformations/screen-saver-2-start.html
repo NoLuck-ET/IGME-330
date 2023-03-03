@@ -20,6 +20,9 @@
 	let ctx = document.querySelector('canvas').getContext('2d');
 	let rotation = 0;
 	let rotationSpeed = .05;
+	let scale = 1;
+	let scaleFactor = 0.01;
+	let count = 0;
 	let transformAmount = 0;
 	let strokeStyle = "black";
 
@@ -29,7 +32,7 @@
 		fillBGWithRandomTint()
 		
 		// 2 - schedule some code to fire at regular intervals
-	
+		scaleFactor = scaleFactor*-1;
 		
 		// 3 - start the animation loop
 		loop();
@@ -37,10 +40,17 @@
 	
 	
 	function loop(){
-	//	requestAnimationFrame(loop);
+		requestAnimationFrame(loop);
+		count++;
+		if(count >= 100){
+			count = 0;
+			scaleFactor = scaleFactor*-1;
+		}
+		scale += scaleFactor;
+		console.log(scaleFactor);
 		ctx.save();
-	//	ctx.translate(320, 240);
-	//	ctx.scale(.5, .5);
+		ctx.translate(320, 240);
+		ctx.scale(scale, scale);
 		ctx.rotate(rotation);
 		ctx.lineWidth=1;
 		ctx.linePath = "round";
@@ -53,8 +63,8 @@
 		ctx.strokeStyle = strokeStyle;
 		ctx.stroke();
 		ctx.restore();
-	//	rotation += rotationSpeed;
-	//	transformAmount += .1;
+		rotation += rotationSpeed;
+		transformAmount += .1;
 	}
 
 	function fillBGWithRandomTint(){
