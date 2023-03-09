@@ -16,15 +16,22 @@
 	const imageURL = "https://www.rit.edu/marketing/brandportal/images/1505/brand-elements/identity/3-color-white.png";
     const fakeURL = "./images/apple.png";
 
-	preloadImage(imageURL,init); 	
+	//preloadImage(imageURL,init); 	
+	let ctx = document.querySelector("canvas").getContext("2d");
+	ctx.fillStyle = "yellow";
+	ctx.fillRect(0,0,600,600);
 
 	// simple pre-loader that loads 1 image
 	// Hey - why don't you rewrite this to handle an *array* of images! :-)
-    const list = [imageURL, fakeURL];
+    let list = [];
+	list.push(imageURL);
+	list.push(fakeURL);
 	// preloadImage(imageURL,callbackFunc);
-	function preloadImage(list,callback){
+	preloadImage(list,init);
+	function preloadImage(array,callback){
 		// 1 - create a new Image object
 		let img = new Image();
+		let imgList = [];
 		
 		// 2 - set up event handlers for the Image object
 		img.onload = () => {
@@ -34,40 +41,41 @@
 	
 		img.onerror = _=>{
             // 4B - called if there is an error
-            console.log(`Image at url "${list[1]}" wouldn't load! Check your URL!`);
+            console.log(`Image at url "${array[1]}" wouldn't load! Check your URL!`);
 		};
 	
 		// 3 - start downloading the image (it is located on an RIT server)
 	    //img.src = url;
-        for(let l of list){
-            img.src = l;
+        for(let i = 0; i< array.length; i++){
+			imgList.push(new Image());
+			imgList[i].src = array[i];
+            //img.src = l;
         }
 	}
 	
 	function init(img){
-			let ctx = document.querySelector("canvas").getContext("2d");
-			ctx.fillStyle = "yellow";
-			ctx.fillRect(0,0,600,600);
 			
-			// 1 - ctx.drawImage(image, dx, dy); // dx = "destination x"
-			//ctx.drawImage(img,0,0);
 			
-			// 2 - ctx.drawImage(image, dx, dy, dWidth, dHeight); 
-			// use dWidth and dHeight to scale the Image
-			// ctx.drawImage(img,0,0,240,240);
-				
-			// 3 - ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-			// use sx, sy, sWidth, sHeight to sample just part of the image
-		    // ctx.drawImage(img, 225, 100, 50, 30, 20, 20, 50, 30);
+		// 1 - ctx.drawImage(image, dx, dy); // dx = "destination x"
+		//ctx.drawImage(img,0,0);
+		
+		// 2 - ctx.drawImage(image, dx, dy, dWidth, dHeight); 
+		// use dWidth and dHeight to scale the Image
+		ctx.drawImage(img,0,0,240,240);
+		console.log(`img loaded`);
 			
-			// 4 - loop and draw!
-			// ctx.translate(150,65);
-			// for(let i=0;i<55;i++){
-			// 	ctx.drawImage(img, 225, 100, 50, 30, -50, -50, 100, 60);
-			// 	ctx.translate(110-i*2,0);
-			// 	ctx.rotate(Math.PI/10);
-			// 	ctx.scale(.95,.95);
-			// }
+		// 3 - ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+		// use sx, sy, sWidth, sHeight to sample just part of the image
+		// ctx.drawImage(img, 225, 100, 50, 30, 20, 20, 50, 30);
+		
+		// 4 - loop and draw!
+		// ctx.translate(150,65);
+		// for(let i=0;i<55;i++){
+		// 	ctx.drawImage(img, 225, 100, 50, 30, -50, -50, 100, 60);
+		// 	ctx.translate(110-i*2,0);
+		// 	ctx.rotate(Math.PI/10);
+		// 	ctx.scale(.95,.95);
+		// }
 	}
 </script>
 </body>
