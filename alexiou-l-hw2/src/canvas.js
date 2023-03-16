@@ -14,11 +14,44 @@ let ctx,canvasWidth,canvasHeight,gradient,analyserNode,audioData;
 
 let images = [];
 let rotation = 0; 
-let gradList = ["#00001b","#00001b","#00001b","#121e33","#121e33","#314f67","#54869b","#7fc1cd","#99e0e4","#b5fffb", "#b5fffb", "#99e0e4", "#7fc1cd", "#54869b", "#314f67", "#121e33", "#121e33", "#00001b", "#00001b", "#00001b"];
-//let gradList = ["#00001b","#121e33","#21354d","#314f67","#416a81","#54869b","#68a3b4","#7fc1cd","#99e0e4","#b5fffb", "#b5fffb", "#99e0e4", "#7fc1cd", "#68a3b4", "#54869b", "#416a81", "#314f67", "#21354d", "#121e33", "#00001b"];
+let towers = [];
+let testTower;
+let stepIncrement = 0;
 
-let gradCount = 0;
-let gradBool = false;
+class TowerSprite{
+    static type = "tower"; // demoing a static (class) variable here
+    constructor({x=0,y=0, width=30, height=-audioData[0] + 50} = {}){ // - Uses destructuring to create defaults, as well as a default for the entire thing
+        //console.log(`${this.constructor.type} created`); // access static property (alternatively, TowerSprite.type)
+        // Initialize .x, .y, .radius and .color properties
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255})`;
+        //console.log(`${this.constructor.type} created with params of: x:${this.x}, height: ${this.height}, width: ${this.width}`);
+        return Object.seal(this); // No longer able to add properties
+    }
+    
+    update(){
+        // Increase the .x property by 1
+        this.x += 1;
+    }
+    
+    draw(body, ctx){
+        // Draw a tower at the x & y
+        ctx.save();
+        ctx.translate(-50,canvasHeight);
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.rect(this.x, 0,this.width,this.height);
+        ctx.closePath();
+        ctx.fill();
+        //ctx.drawImage(this.body,this.x,0,this.width,this.height);
+        ctx.drawImage(body,this.x,this.height -26,this.width, 300);
+        
+        ctx.restore();
+    }
+}
 
 const setupCanvas = (canvasElement,analyserNodeRef) => {
 	// create drawing context
@@ -34,6 +67,8 @@ const setupCanvas = (canvasElement,analyserNodeRef) => {
 };
 
 const draw = (params={}) => {
+    rotation += .003;
+    stepIncrement++;
   // 1 - populate the audioData array with the frequency data from the analyserNode
 	// notice these arrays are passed "by reference" 
     //analyserNode.getByteFrequencyData(audioData);
@@ -46,15 +81,18 @@ const draw = (params={}) => {
     ctx.globalAlpha = 0.1;
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.restore();
-		
-	// 3 - draw gradient
-	if(params.showGradient){
-        ctx.save();
-        ctx.fillStyle = gradient;
-        ctx.globalAlpha = 1;
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        ctx.restore();
-    }
+	
+    images = loader.images;
+
+    // 3 - draw custom gradient image
+    ctx.beginPath();
+    ctx.closePath();
+    ctx.save();
+    ctx.translate(canvasWidth/2,canvasHeight);
+    ctx.rotate(rotation);
+    ctx.drawImage(images[3],-575,-575,1150,1150);
+    ctx.restore();
+    
 
 	// 4 - draw bars
 	/*if(params.showBars){
@@ -76,50 +114,27 @@ const draw = (params={}) => {
         }
         ctx.restore();
     }*/
-
-	// 5 - draw circles
-	/*if(params.showCircles){
-        let maxRadius = canvasHeight/4;
-        ctx.save();
-        ctx.globalAlpha = 0.5;
-        for(let i = 0; i < audioData.length; i++)
-        {
-            //red-ish circles
-            let percent = audioData[i] / 255;
-            
-            let circleRadius = percent * maxRadius;
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(255,111,111, 0.34 - percent/3.0);
-            ctx.arc(canvasWidth/2, canvasHeight/2, circleRadius, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-
-            //blue-ish circles. Bigger, more transparent
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(0,0,255,0.10 - percent/10.0);
-            ctx.arc(canvasWidth/2, canvasHeight/2, circleRadius * 1.5, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-
-            //yellow-ish circles. Smaller
-            ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(200, 200, 0, 0.5 - percent/5.0);
-            ctx.arc(canvasWidth/2, canvasHeight/2, circleRadius * 0.5, 0, 2 * Math.PI, false);
-            ctx.fill();
-            ctx.closePath();
-            ctx.restore();
-        }
-        ctx.restore();
-    }*/
-
     
 
-    // 6 - bitmap manipulation
-	// TODO: right now. we are looping though every pixel of the canvas (320,000 of them!), 
-	// regardless of whether or not we are applying a pixel effect
-	// At some point, refactor this code so that we are looping though the image data only if
-	// it is necessary
 
+    // 4 - drawing images
+    drawCelestialBody(0, -canvasHeight + 60, images[0], rotation, "#53676C", params);
+    drawCelestialBody(0, canvasHeight - 60, images[1], rotation, "#FFC257", params);
+    if(stepIncrement >= 31){
+        stepIncrement = 0;
+        towers.push(new TowerSprite(0, 50, 30, 50));
+    }
+    
+    for(let i = 0; i < towers.length; i++){
+        towers[i].update();
+        towers[i].draw(images[2], ctx);
+        if(towers[i].x > canvasWidth + 50){
+            towers.splice(i, 1);
+            //console.log("last tower deleted");
+        }
+    }
+    
+    // 5 - bitmap manipulation
 	// A) grab all of the pixels on the canvas and put them in the `data` array
 	// `imageData.data` is a `Uint8ClampedArray()` typed array that has 1.28 million elements!
 	// the variable `data` below is a reference to that array 
@@ -150,7 +165,7 @@ const draw = (params={}) => {
             //data[i+3] is the alpha, we're leaving that alone
         }// end if
 	} // end for
-
+    
     // note we are stepping through *each* sub-pixel
     if(params.showEmboss){ // emboss effect
         for(let i = 0; i < length; i++)
@@ -159,80 +174,61 @@ const draw = (params={}) => {
             data[i] = 127 + 2*data[i] - data[i+4] - data[i + width * 4];
         }
     }
-    
-	
-	// D) copy image data back to canvas
+
+    // D) copy image data back to canvas
     ctx.putImageData(imageData,0,0);
+    
 
-
-    // 7 - drawing images
-    rotation += .003;
-    images = loader.images;
-    //ctx.drawImage(image, dx, dy, dWidth, dHeight); 
-    // draw "from center"
-    drawCelestialBody(0, -canvasHeight + 60, images[0], rotation, "#53676C");
-    drawCelestialBody(0, canvasHeight - 60, images[1], rotation, "#FFC257");
-
-    // 8 - establis gradient
-    let temp = gradList[0];
-    gradCount++;
-    if(gradCount%60 == 1){
-        if(gradBool){
-            for(let i = 0; i < gradList.length - 1; i++){
-                gradList[i] = gradList[i+1];
-            }
-            gradBool = !gradBool;
-        }
-        else{
-            for(let i = gradList.length-1; i <= 1; i--){
-                gradList[i] = gradList[i-1];
-            }
-            gradBool = !gradBool;
-        }
-        
-    }
-    gradList[gradList.length-1] = temp;
-    console.log(gradList);
-    gradient = utils.getLinearGradient(ctx,0,0,0,canvasHeight*5,[{percent:0.05,color:gradList[0]},{percent:0.1,color:gradList[1]},{percent:0.15,color:gradList[2]}, {percent:0.2,color:gradList[3]},{percent:0.25,color:gradList[4]} ,{percent:0.3,color:gradList[5]}, {percent:0.35,color:gradList[6]}, {percent:0.4,color:gradList[7]}, {percent:0.45,color:gradList[8]},{percent:0.5,color:gradList[9]},{percent:0.55,color:gradList[10]},{percent:0.6,color:gradList[11]},{percent:0.65,color:gradList[12]},{percent:0.7,color:gradList[13]},{percent:0.75,color:gradList[14]},{percent:0.8,color:gradList[15]},{percent:0.85,color:gradList[16]},{percent:0.9,color:gradList[17]},{percent:0.95,color:gradList[18]},{percent:1,color:gradList[19]}]);
 };// end draw
 
-const drawCelestialBody = (x, y, body, rotation, color) => {
+//
+const drawCelestialBody = (x, y, body, rotation, color, params) => {
     ctx.save();
-        ctx.translate(canvasWidth/2,canvasHeight);
-        ctx.save();
-            ctx.rotate(rotation);
-            ctx.translate(x,y);
-            ctx.save();
-            ctx.beginPath();
-    ctx.moveTo(0,35 + audioData[0]/5);
-    for(let i = 0; i < audioData.length; i++){
-        //points[i] = (Math.random() * 15) + 50;
-        ctx.lineTo(0,35 + audioData[i]/5);
-        ctx.rotate((Math.PI * 2)/128); // 0.015625
+    ctx.translate(canvasWidth/2,canvasHeight);
+    ctx.save();
+    ctx.rotate(rotation);
+    ctx.translate(x,y);
+    ctx.save();
+    ctx.beginPath();
+    if(params.showCircles){
+        ctx.moveTo(0,35 + audioData[0]/5);
+        for(let i = 0; i < audioData.length; i++){
+            //points[i] = (Math.random() * 15) + 50;
+            //ctx.lineTo(0,35 + audioData[i]/5);
+            ctx.bezierCurveTo(0, 35 + audioData[i]/5, 0, 35 + audioData[i]/5, 0, 35 + audioData[i]/5);
+            ctx.rotate((Math.PI * 2)/128); // 0.015625
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
     }
+    ctx.restore();
+
+    ctx.save();
     //following loop is for "bars" mode
-    /*for(let i = 0; i < audioData.length; i++){
-        let currentPos = audioData[i]/5;
-        ctx.moveTo(0,15 + currentPos);
-        //points[i] = (Math.random() * 15) + 50;
-        ctx.lineTo(0,35 + currentPos);
-        ctx.rotate((Math.PI * 2)/128); // 0.015625
-    }*/
+    if(params.showBars){
+        ctx.beginPath();
+        for(let i = 0; i < audioData.length; i++){
+            let currentPos = audioData[i]/5;
+            ctx.moveTo(0,15 + currentPos);
+            //points[i] = (Math.random() * 15) + 50;
+            ctx.lineTo(0,35 + currentPos);
+            ctx.rotate((Math.PI * 2)/128); // 0.015625
+        }
+        ctx.closePath();
+        ctx.strokeStyle = "white"; // used only if in bars mode
+        ctx.stroke();
+    }
     ctx.restore();
     //console.log(audioData.length);
-    //ctx.strokeStyle = "white"; // used only if in bars mode
-    ctx.fillStyle = color;
-    ctx.closePath();
+    
     //ctx.stroke(); // used only if in bars mode
-    ctx.fill();
-            ctx.drawImage(body,-50,-50,100,100);
-            //ctx.restore();
-        ctx.restore();
+    //ctx.fill();
+    ctx.drawImage(body,-50,-50,100,100);
+    ctx.restore();
     ctx.restore();
 }
 
-const drawCoulds = (x,y,color) => {
 
-}
 
 export {setupCanvas,draw};

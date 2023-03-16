@@ -8,6 +8,7 @@ window.onload = ()=>{
 	images.push(preloadImage("./images/moon.png"));
 	images.push(preloadImage("./images/sun.png"));
 	images.push(preloadImage("./images/tower.png"));
+	images.push(preloadImage("./images/sunset.png"));
 	
 	// 2 - start up app
 	main.init();

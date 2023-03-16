@@ -13,6 +13,42 @@
         let greenCircle;
         let sprites = [];
 
+        class TowerSprite{
+            static type = "tower"; // demoing a static (class) variable here
+            constructor({x=0,y=0, width=30, height=-50,color="white"} = {}){ // - Uses destructuring to create defaults, as well as a default for the entire thing
+                console.log(`${this.constructor.type} created`); // access static property (alternatively, TowerSprite.type)
+                // YOU DO THIS - initialize .x, .y, .radius and .color properties
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                //this.image = images[2];
+                this.color = color;
+                //or
+                //Object.assign(this,{x,y,radius,color});
+                //or
+                //Object.assign(this,{x:x,y:y,radius:radius,color:color}); // connects name to variable - should onyl be used if variable and its name are different
+                return Object.seal(this); // No longer able to add properties
+            }
+            
+            update(){
+                // Increase the .x property by 1
+                this.x += 1;
+            }
+            
+            draw(ctx){
+                // Draw a tower at the x & y
+                ctx.save();
+                ctx.translate(0,canvasHeight);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.rect(this.x,0,this.width,-this.height);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
         class CircleSprite{
             static type = "arc"; // demoing a static (class) variable here
             constructor({x=0,y=0,radius=10,color="white"} = {}){ // - Uses destructuring to create defaults, as well as a default for the entire thing
@@ -93,6 +129,13 @@
                 y: 100,
                 radius: 20,
                 color: "green"
+            }));
+            sprites.push(new TowerSprite({
+                x: -10,
+                y: 200, 
+                width: 50, 
+                height: 200, 
+                color:"white"
             }));
             loop();
             sprites.push(new CircleSprite({}));

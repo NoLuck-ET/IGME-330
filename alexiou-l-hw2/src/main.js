@@ -101,23 +101,23 @@ const setupUI = (canvasElement) => {
     drawParams.showGradient = e.target.checked;
   };
   document.querySelector("#bars-cb").onclick = (e) => {
-    //showGradient = e.target.checked;
+    //showBars = e.target.checked;
     drawParams.showBars = e.target.checked;
   };
   document.querySelector("#circles-cb").onclick = (e) => {
-    //showGradient = e.target.checked;
+    //showCircles = e.target.checked;
     drawParams.showCircles = e.target.checked;
   };
   document.querySelector("#noise-cb").onclick = (e) => {
-    //showGradient = e.target.checked;
+    //showNoise = e.target.checked;
     drawParams.showNoise = e.target.checked;
   };
   document.querySelector("#invert-cb").onclick = (e) => {
-    //showGradient = e.target.checked;
+    //showInvert = e.target.checked;
     drawParams.showInvert = e.target.checked;
   };
   document.querySelector("#emboss-cb").onclick = (e) => {
-    //showGradient = e.target.checked;
+    //showEmboss = e.target.checked;
     drawParams.showEmboss = e.target.checked;
   };
 	
