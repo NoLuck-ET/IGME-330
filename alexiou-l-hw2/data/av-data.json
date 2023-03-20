@@ -1,0 +1,19 @@
+{
+    "appTitle" : "Audio Visualizer",
+    "songs" : [
+        {"name" : "Stop a Gaben", "fileName" : "Stop a Gaben.mp3", "artist": "Mastgrr"},
+        {"name" : "In The Pines", "fileName" : "In the Pines.mp3", "artist": "Danny Farrant"},
+        {"name" : "C'est La Vie", "fileName" : "C'est La Vie.mp3", "artist": "Weathers"},
+        {"name" : "Mr. Sunshine", "fileName" : "Mr. Sunshine.mp3", "artist": "Arden Jones"}
+        
+    ],
+    "images" : [
+        {"fileName" : "moon.png", "origin" : "http://www.stickpng.com/img/nature/moon/moon-clipart"},
+        {"fileName" : "sun.png", "origin" : "https://www.pngfind.com/mpng/wwwJR_28-collection-of-sun-clipart-png-transparent-png/"},
+        {"fileName" : "tower.png", "origin" : "self"},   
+        {"fileName" : "sunset.png", "origin" : "self"},
+        {"fileName" : "fire.png", "origin" : "https://www.istockphoto.com/illustrations/bonfire-animation-sprites"}
+        
+    ],
+    "instructions" : ["Show bars: Displays the audio data around the sun and moon as bars.","Show Circles: Displays the audio data around the sun and moon as 'circles'.","Invert Colors: Will invert the colors displayed.","Emboss: Displays a grey-scale sort of height map of the canvas.","Highshelf Filter: Emphasises the high-frequency sounds.","Lowshelf Filter: Emphasises the low-frequency sounds.","Distortion: Will distort the audio and display a graphic based on distortion."]
+  }

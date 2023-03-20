@@ -11,18 +11,23 @@ import * as utils from './utils.js';
 import * as audio from './audio.js';
 import * as canvas from './canvas.js';
 
+// parameters determined/updated in HTML, control variables for functions/actions.
 const drawParams = {
-  showGradient  : true,
-  showBars      : true,
-  showCircles   : true,
-  showNoise     : false,
-  showInvert    : false,
-  showEmboss    : false
+  showBars       : true,
+  showCircles    : true,
+  showNoise      : false,
+  showInvert     : false,
+  showEmboss     : false,
+  showHighshelf  : false,
+  showLowshelf   : false,
+  showDistortion : false
 };
+
+let distortionAmount = 0;
 
 // 1 - here we are faking an enumeration
 const DEFAULTS = Object.freeze({
-	sound1  :  "./media/New Adventure Theme.mp3"
+	sound1  :  "media/Stop a Gaben.mp3"
 });
 
 const init = () => {
@@ -37,7 +42,7 @@ const init = () => {
 
 const setupUI = (canvasElement) => {
   // A - hookup fullscreen button
-  const fsButton = document.querySelector("#fsButton");
+  const fsButton = document.querySelector("#fs-button");
   
 	
   // add .onclick event to button
@@ -47,7 +52,7 @@ const setupUI = (canvasElement) => {
   };
 
   // B - hookup play button
-  const playButton = document.querySelector("#playButton");
+  const playButton = document.querySelector("#play-button");
 
   // add .onclick event to button
   playButton.onclick = e => {
@@ -70,8 +75,9 @@ const setupUI = (canvasElement) => {
   };
 
   // C - Hookup volume slider & label
-  let volumeSlider = document.querySelector("#volumeSlider");
-  let volumeLabel = document.querySelector("#volumeLabel");
+  let volumeSlider = document.querySelector("#volume-slider");
+  let volumeLabel = document.querySelector("#volume-label");
+  document.querySelector('#slider-distortion').value = distortionAmount;
 
   //add .oninput event to slider
   volumeSlider.oninput = e => {
@@ -85,7 +91,7 @@ const setupUI = (canvasElement) => {
   volumeSlider.dispatchEvent(new Event("input"));
 
   // D - Hookup track <select>
-  let trackSelect = document.querySelector("#trackSelect");
+  let trackSelect = document.querySelector("#track-select");
   //add .onchange event to <select>
   trackSelect.onchange = e => {
     audio.loadSoundFile(e.target.value);
@@ -95,11 +101,18 @@ const setupUI = (canvasElement) => {
     }
   };
 
-  // E - Hookup toggles
-  document.querySelector("#gradient-cb").onclick = (e) => {
-    //showGradient = e.target.checked;
-    drawParams.showGradient = e.target.checked;
+  let audioSelect = document.querySelector('#audio-select');
+  audioSelect.onchange = e => {
+    let sample = new Uint8Array(audio.analyserNode.fftSize/2);
+    if(e.target.value == 'Frequency'){
+      audio.analyserNode.getByteFrequencyData(sample);
+      
+    }else{
+      audio.analyserNode.getByteTimeDomainData(sample);
+    }
   };
+
+  // E - Hookup toggles
   document.querySelector("#bars-cb").onclick = (e) => {
     //showBars = e.target.checked;
     drawParams.showBars = e.target.checked;
@@ -120,39 +133,74 @@ const setupUI = (canvasElement) => {
     //showEmboss = e.target.checked;
     drawParams.showEmboss = e.target.checked;
   };
-	
+  document.querySelector('#highshelf-cb').onchange = e => {
+    drawParams.showHighshelf = e.target.checked;
+    toggleHighshelf(); // turn on or turn off the filter, depending on the value of `highshelf`!
+  };
+  document.querySelector('#lowshelf-cb').onchange = e => {
+    drawParams.showLowshelf = e.target.checked;
+    toggleLowshelf(); // turn on or turn off the filter, depending on the value of `lowshelf`!
+  };
+  document.querySelector('#distortion-cb').onchange = e => {
+    drawParams.showDistortion = e.target.checked;
+    toggleDistortion(); // turn on or turn off the filter, depending on the value of `distortion`!
+  };
+  document.querySelector('#slider-distortion').onchange = e => {
+    distortionAmount = Number(e.target.value);
+    toggleDistortion();
+  };
+  
+	toggleHighshelf(); // when the app starts up, turn on or turn off the filter, depending on the value of `highshelf`!
+  toggleLowshelf(); // when the app starts up, turn on or turn off the filter, depending on the value of `lowshelf`!
+  toggleDistortion();
 }; // end setupUI
 
 const loop = () => {
-  
-  requestAnimationFrame(loop);
+  setTimeout(loop,1000/60);
+  //requestAnimationFrame(loop);
   canvas.draw(drawParams);
-  /* NOTE: This is temporary testing code that we will delete in Part II */
-  // // 1) create a byte array (values of 0-255) to hold the audio data
-  // // normally, we do this once when the program starts up, NOT every frame
-  // let audioData = new Uint8Array(audio.analyserNode.fftSize/2);
-  
-  // // 2) populate the array of audio data *by reference* (i.e. by its address)
-  // audio.analyserNode.getByteFrequencyData(audioData);
-  // //audio.analyserNode.getByteTimeDomainData(audioData); // waveform data
-  
-  // // 3) log out the array and the average loudness (amplitude) of all of the frequency bins
-  //   console.log(audioData);
-    
-  //   console.log("-----Audio Stats-----");
-  //   let totalLoudness =  audioData.reduce((total,num) => total + num);
-  //   let averageLoudness =  totalLoudness/(audio.analyserNode.fftSize/2);
-  //   let minLoudness =  Math.min(...audioData); // ooh - the ES6 spread operator is handy!
-  //   let maxLoudness =  Math.max(...audioData); // ditto!
-  //   // Now look at loudness in a specific bin
-  //   // 22050 kHz divided by 128 bins = 172.23 kHz per bin
-  //   // the 12th element in array represents loudness at 2.067 kHz
-  //   let loudnessAt2K = audioData[11]; 
-  //   console.log(`averageLoudness = ${averageLoudness}`);
-  //   console.log(`minLoudness = ${minLoudness}`);
-  //   console.log(`maxLoudness = ${maxLoudness}`);
-  //   console.log(`loudnessAt2K = ${loudnessAt2K}`);
-  //   console.log("---------------------");
+};
+
+//toggle high-shelf sound altering
+const toggleHighshelf = () => {
+  if(drawParams.showHighshelf){
+    audio.biquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime); // we created the `biquadFilter` (i.e. "treble") node last time
+    audio.biquadFilter.gain.setValueAtTime(25, audio.audioCtx.currentTime);
+  }else{
+    audio.biquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
+  }
+};
+
+//toggle low-shelf sound altering
+const toggleLowshelf = () => {
+  if(drawParams.showLowshelf){
+    audio.lowShelfBiquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
+    audio.lowShelfBiquadFilter.gain.setValueAtTime(15, audio.audioCtx.currentTime);
+  }else{
+    audio.lowShelfBiquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
+  }
+};
+
+// Toggles distortion, and sets sprite alpha based on input
+const toggleDistortion = () => {
+  if(drawParams.showDistortion){
+    audio.distortionFilter.curve = null; // being paranoid and trying to trigger garbage collection
+    audio.distortionFilter.curve = makeDistortionCurve(distortionAmount);
+    canvas.fire.setTransparency(distortionAmount/100);
+  }else{
+    audio.distortionFilter.curve = null;
+    canvas.fire.setTransparency(0);
+  }
+};
+
+  // from: https://developer.mozilla.org/en-US/docs/Web/API/WaveShaperNode
+const makeDistortionCurve = (amount=20) => {
+  let n_samples = 256, curve = new Float32Array(n_samples);
+  for (let i =0 ; i < n_samples; ++i ) {
+      let x = i * 2 / n_samples - 1;
+      curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
+  }
+  return curve;
 };
 
 export {init};

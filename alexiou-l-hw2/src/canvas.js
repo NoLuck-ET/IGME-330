@@ -9,25 +9,26 @@
 
 import * as utils from './utils.js';
 import * as loader from './loader.js';
+import { getNote } from './audio.js';
 
-let ctx,canvasWidth,canvasHeight,gradient,analyserNode,audioData;
+let ctx,canvasWidth,canvasHeight,analyserNode,audioData;
 
 let images = [];
 let rotation = 0; 
 let towers = [];
-let testTower;
 let stepIncrement = 0;
+let fire;
 
 class TowerSprite{
-    static type = "tower"; // demoing a static (class) variable here
-    constructor({x=0,y=0, width=30, height=-audioData[0] + 50} = {}){ // - Uses destructuring to create defaults, as well as a default for the entire thing
-        //console.log(`${this.constructor.type} created`); // access static property (alternatively, TowerSprite.type)
-        // Initialize .x, .y, .radius and .color properties
+    static type = "tower";
+    constructor({x=0,y=0, width=30, height=((-getNote()/7 <= -200) ? 0 : (-getNote()/7))} = {}){ // - Uses destructuring to create defaults, as well as a default for the entire thing
+        // Initialize properties
         this.x = x;
         this.y = y;
+        this.body = images[2];
         this.width = width;
         this.height = height;
-        this.color = `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255})`;
+        this.color = utils.getRandomColor();
         //console.log(`${this.constructor.type} created with params of: x:${this.x}, height: ${this.height}, width: ${this.width}`);
         return Object.seal(this); // No longer able to add properties
     }
@@ -37,7 +38,7 @@ class TowerSprite{
         this.x += 1;
     }
     
-    draw(body, ctx){
+    draw(ctx){
         // Draw a tower at the x & y
         ctx.save();
         ctx.translate(-50,canvasHeight);
@@ -46,24 +47,74 @@ class TowerSprite{
         ctx.rect(this.x, 0,this.width,this.height);
         ctx.closePath();
         ctx.fill();
-        //ctx.drawImage(this.body,this.x,0,this.width,this.height);
-        ctx.drawImage(body,this.x,this.height -26,this.width, 300);
+        ctx.drawImage(this.body,this.x,this.height -26,this.width, 300);
         
         ctx.restore();
     }
 }
+
+class FireSprite{
+    static type = "fire";
+    constructor(){
+        //initialize properties | No defaults, there's only one.
+        this.x = 0;
+        this.y = 0;
+        this.width = 204;
+        this.height = 195;
+        this.body = images[4];
+        this.control = 0;
+        this.frequency = 0;
+        this.transparency = 0;
+        return Object.seal(this); // No longer able to add properties
+    }
+
+    setTransparency(value){
+        this.transparency = value;
+    }
+
+    update(){
+        if(this.frequency == 3){ // so that it updates at 30 fps instead of 60
+            this.x += this.width;
+            if(this.control == 2 && this.x >= 408){ // will prevent the animation from showing that false-frame
+                this.control = 0;
+                this.x = 0;
+                this.y = 0;
+            }
+            //Once x goes out of range, reset it & got to next y-level.
+            if(this.x >= 612){
+                this.x = 0;
+                this.y += this.height;
+                this.control++;
+            }
+            //Once y goes out of range, reset it.
+            if(this.y > 612){
+                this.y = 0;
+            }
+            this.frequency = 0;
+        }
+        this.frequency++;
+    }
+    
+    draw(body,ctx){
+        ctx.save();
+        ctx.globalAlpha = this.transparency;
+        ctx.drawImage(body, this.x, this.y, this.width, this.height, 0, 0, canvasWidth, canvasHeight*1.2);
+        ctx.restore();
+        //console.log(`x: ${this.x}       y: ${this.y}`);
+    }
+}
+fire = new FireSprite();
 
 const setupCanvas = (canvasElement,analyserNodeRef) => {
 	// create drawing context
 	ctx = canvasElement.getContext("2d");
 	canvasWidth = canvasElement.width;
 	canvasHeight = canvasElement.height;
-	// create a gradient that runs top to bottom 
-	gradient = utils.getLinearGradient(ctx,0,0,0,canvasHeight,[{percent:0.05,color:"#00001b"},{percent:0.1,color:"#121e33"},{percent:0.15,color:"#21354d"}, {percent:0.2,color:"#314f67"},{percent:0.25,color:"#416a81"} ,{percent:0.3,color:"#54869b"}, {percent:0.35,color:"#68a3b4"}, {percent:0.4,color:"#7fc1cd"}, {percent:0.45,color:"#99e0e4"},{percent:0.5,color:"#b5fffb"},{percent:0.55,color:"#b5fffb"},{percent:0.6,color:"#99e0e4"},{percent:0.65,color:"#7fc1cd"},{percent:0.7,color:"#68a3b4"},{percent:0.75,color:"#54869b"},{percent:0.8,color:"#416a81"},{percent:0.85,color:"#314f67"},{percent:0.9,color:"#21354d"},{percent:0.95,color:"#121e33"},{percent:1,color:"#00001b"},]);
     // keep a reference to the analyser node
 	analyserNode = analyserNodeRef;
 	// this is the array where the analyser data will be stored
 	audioData = new Uint8Array(analyserNode.fftSize/2);
+    images = loader.images;
 };
 
 const draw = (params={}) => {
@@ -82,7 +133,7 @@ const draw = (params={}) => {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.restore();
 	
-    images = loader.images;
+    
 
     // 3 - draw custom gradient image
     ctx.beginPath();
@@ -90,45 +141,29 @@ const draw = (params={}) => {
     ctx.save();
     ctx.translate(canvasWidth/2,canvasHeight);
     ctx.rotate(rotation);
+    //ctx.drawImage(images[3],-1000,-1000,2000,2000);
     ctx.drawImage(images[3],-575,-575,1150,1150);
+    //console.log(images[3]);
     ctx.restore();
-    
-
-	// 4 - draw bars
-	/*if(params.showBars){
-        let barSpacing = 4;
-        let margin = 5;
-        let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
-        let barWidth = screenWidthForBars / audioData.length;
-        let barHeight = 200;
-        let topSpacing = 100;
-
-        ctx.save();
-        ctx.fillStyle = `rgba(255,255,255,0.50)`;
-        ctx.strokeStyle = `rgba(0,0,0,0.50)`;
-        // loop through the data and draw
-        for(let i = 0; i < audioData.length; i++)
-        {
-            ctx.fillRect(margin + i * (barWidth + barSpacing), topSpacing + 256-audioData[i],barWidth,barHeight);
-            ctx.strokeRect(margin + i * (barWidth + barSpacing), topSpacing + 256-audioData[i],barWidth,barHeight);
-        }
-        ctx.restore();
-    }*/
-    
-
 
     // 4 - drawing images
     drawCelestialBody(0, -canvasHeight + 60, images[0], rotation, "#53676C", params);
     drawCelestialBody(0, canvasHeight - 60, images[1], rotation, "#FFC257", params);
+
+    fire.update();
+    fire.draw(images[4], ctx); // some reason, it doesn't like when I have the image to draw set in constructor - odd
+
+    //creating towers
     if(stepIncrement >= 31){
         stepIncrement = 0;
-        towers.push(new TowerSprite(0, 50, 30, 50));
+        towers.push(new TowerSprite(0, 50, 30, 30));
     }
     
+    //drawing towers
     for(let i = 0; i < towers.length; i++){
         towers[i].update();
-        towers[i].draw(images[2], ctx);
-        if(towers[i].x > canvasWidth + 50){
+        towers[i].draw(ctx);
+        if(towers[i].x > canvasWidth + 90){
             towers.splice(i, 1);
             //console.log("last tower deleted");
         }
@@ -146,14 +181,10 @@ const draw = (params={}) => {
     for(let i = 0; i < length; i += 4){ //----------------- PERSONAL NOTE: Too noisy
 		// C) randomly change every 20th pixel to red
         if(params.showNoise && Math.random() < 0.5){
-			// data[i] is the red channel
-			// data[i+1] is the green channel
-			// data[i+2] is the blue channel
-			// data[i+3] is the alpha channel
 			data[i] = data[i+1] = data[i+2] = 0;// zero out the red and green and blue channels
-			data[i] = 90;// make the red channel slightly red
-            data[i+1] = 75;// make the gren channel a tad green
-            data[i+2] = 150;// make the blue channel very blue
+			data[i] = 150;// make the red channel slightly red
+            data[i+1] = 125;// make the gren channel a tad green
+            data[i+2] = 255;// make the blue channel very blue
 		} // end if
 
         //invert?
@@ -181,7 +212,9 @@ const draw = (params={}) => {
 
 };// end draw
 
-//
+//helper functions 
+
+// drawCelestialBody - Helper function to draw sun & moon, as well as their respective bars & "circles".
 const drawCelestialBody = (x, y, body, rotation, color, params) => {
     ctx.save();
     ctx.translate(canvasWidth/2,canvasHeight);
@@ -191,6 +224,7 @@ const drawCelestialBody = (x, y, body, rotation, color, params) => {
     ctx.save();
     ctx.beginPath();
     if(params.showCircles){
+        ctx.lineJoin = "round";
         ctx.moveTo(0,35 + audioData[0]/5);
         for(let i = 0; i < audioData.length; i++){
             //points[i] = (Math.random() * 15) + 50;
@@ -227,8 +261,6 @@ const drawCelestialBody = (x, y, body, rotation, color, params) => {
     ctx.drawImage(body,-50,-50,100,100);
     ctx.restore();
     ctx.restore();
-}
+};
 
-
-
-export {setupCanvas,draw};
+export {setupCanvas,draw, fire};

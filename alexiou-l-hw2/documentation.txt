@@ -1,0 +1,25 @@
+Audio graph:
+ - High-shelf filter
+ - Low-shelf filter
+ - Distortion filter
+ - Oscillator
+
+Sprites:
+ - Tower: Creates a tower every 31 frames at whatever frequency the audio is currently at (refer to audio.js for how)
+      with a random color in its windows. (A colored rectangle drawn first with the tower drawn over.
+ - Fire: Animates a blazing fire over the city at 30 frames per second. Transparency determined by distortion slider
+      (if distorion is on).
+
+Json:
+ - Songs
+ - Images (not used by json - refer to loader.js)
+ - Instructions
+
+Improvement over AV HW (I assume pe06?):
+ - I would say 15% of 15% for this. I originally wanted an animated gradient, scrolling mountain range, and rainclouds.
+	However after spending a LOT of time over break trying to animate the gradient I scrapped it and didn't have
+	enough time to do the other things on my wishlist. (I genuinely did not have enough time. I lost sleep trying
+	to make my ideas work).
+
+Comments:
+ - I require asistance in applying my ideas for the future portfolio piece.

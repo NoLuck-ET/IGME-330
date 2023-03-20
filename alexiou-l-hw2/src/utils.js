@@ -19,6 +19,17 @@ const makeColor = (red, green, blue, alpha = 1) => {
     }
     return lg;
   };
+
+  // getAverageOfArray - Adds all elements of an array then takes the average.
+  const getAverageOfArray = (array) => {
+    let value = 0;
+    for(let a of array){
+      value += a; 
+    }
+    value = value/array.length;
+    //console.log(value);
+    return value;
+  };
   
   // https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
   const goFullscreen = (element) => {
@@ -34,4 +45,4 @@ const makeColor = (red, green, blue, alpha = 1) => {
     // .. and do nothing if the method is not supported
   };
   
-  export {makeColor, getRandomColor, getLinearGradient, goFullscreen};
+  export {makeColor, getRandomColor, getLinearGradient, getAverageOfArray ,goFullscreen};
