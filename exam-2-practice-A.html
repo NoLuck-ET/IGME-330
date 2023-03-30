@@ -23,38 +23,37 @@
 		<li>Niko - age 2</li>
 	</ol>
 */
- const pets = [{name: "Luna", age: 5}, {name: "Niko", age: 2}, {name: "Pee", age: 8}, {name: "Joey", age: 1}];
- document.querySelector("ol").innerHTML = pets.map(p => `<li>${p.name}</li>`).join("");
-
-
+ const pets = [{name: "Luna", age: 5}, {name: "Niko", age: 2}];
+ document.querySelector("ol").innerHTML = pets.map(p => `<li>Name: ${p.name}</li>`).join("");
 
 	// 2) Create an ES6 class named Dog. 
-	// 2A) In the constructor of Dog initialize the 2 passed in arguments -
-	// `name` and `age` - as properties.
-	// 2B) Give the Dog class a `bark()` method, when called this method will log out 
-	// "Woof, Woof my name is XXX" where XXX is the value of the `.name` property of the dog instance
-    class Dog{
-        constructor(name, age){
-            this.name = name;
-            this.age = age;
-        }
-        
-        bark(){
-            console.log(`Woof, woof my name is ${this.name}`);
-        }
-    }
+		// 2A) In the constructor of Dog initialize the 2 passed in arguments -
+		// `name` and `age` - as properties.
+		// 2B) Give the Dog class a `bark()` method, when called this method will log out 
+		// "Woof, Woof my name is XXX" where XXX is the value of the `.name` property of the dog instance
+	class Dog{
+		constructor(name, age){
+			this.name = name;
+			this.age = age;
+		}
+
+		bark(){
+			console.log(`Woof, woof my name is ${this.name}`);
+		}
+	}
 
 	// 3) Create a new instance of Dog named `dog1`. Pass in "Wags" and 5 for the name and age.
-	// 3A) Write code that calls the `bark` method of `dog1` 
+		// 3A) Write code that calls the `bark` method of `dog1` 
 	let dog1 = new Dog("Wags", 5);
-    dog1.bark();
+	dog1.bark();
 
 	// 4) Create a new object literal named `fancyDog` and set its prototype object to dog1 above.
-	// Hint: Use Object.create()
-	// 4A) Add a `breed` property to `fancyDog` and give it a value of "Bichon Frisé"
-	// 4B) Call the `bark` method of `fancyDog` - it should log out "Woof, Woof my name is Wags"
-    let fancyDog = Object.create(dog1);
-    fancyDog.bark();
+		// Hint: Use Object.create()
+		// 4A) Add a `breed` property to `fancyDog` and give it a value of "Bichon Frisé"
+		// 4B) Call the `bark` method of `fancyDog` - it should log out "Woof, Woof my name is Wags"
+	let fancyDog = Object.create(dog1);
+	fancyDog.breed = "Bichon Frisé";
+	fancyDog.bark();
 
   
 	
