@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Exam #2 - Practice A</title>
+</head>
+<body>
+<h1>Exam #2 - Practice A</h1>
+<ol>
+  <!—- The generated HTML will go here -—>
+</ol>
+<script>
+  "use strict";
+  
+/*
+	1) Use array.map() and array.join() to step through the pets array below and put the name and
+		the age of each dog in an <li> tag, and then add it to the existing <ol> tag on the page.
+	
+	The final HTML will look like this after it is added:
+
+	<ol>
+		<li>Luna - age 5</li>
+		<li>Niko - age 2</li>
+	</ol>
+*/
+ const pets = [{name: "Luna", age: 5}, {name: "Niko", age: 2}, {name: "Pee", age: 8}, {name: "Joey", age: 1}];
+ document.querySelector("ol").innerHTML = pets.map(p => `<li>${p.name}</li>`).join("");
+
+
+
+	// 2) Create an ES6 class named Dog. 
+	// 2A) In the constructor of Dog initialize the 2 passed in arguments -
+	// `name` and `age` - as properties.
+	// 2B) Give the Dog class a `bark()` method, when called this method will log out 
+	// "Woof, Woof my name is XXX" where XXX is the value of the `.name` property of the dog instance
+    class Dog{
+        constructor(name, age){
+            this.name = name;
+            this.age = age;
+        }
+        
+        bark(){
+            console.log(`Woof, woof my name is ${this.name}`);
+        }
+    }
+
+	// 3) Create a new instance of Dog named `dog1`. Pass in "Wags" and 5 for the name and age.
+	// 3A) Write code that calls the `bark` method of `dog1` 
+	let dog1 = new Dog("Wags", 5);
+    dog1.bark();
+
+	// 4) Create a new object literal named `fancyDog` and set its prototype object to dog1 above.
+	// Hint: Use Object.create()
+	// 4A) Add a `breed` property to `fancyDog` and give it a value of "Bichon Frisé"
+	// 4B) Call the `bark` method of `fancyDog` - it should log out "Woof, Woof my name is Wags"
+    let fancyDog = Object.create(dog1);
+    fancyDog.bark();
+
+  
+	
+  </script>
+
+
+</body>
+</html>
