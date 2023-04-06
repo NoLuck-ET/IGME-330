@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    // Create a class and extend HTMLElement
+    class MyElement extends HTMLElement{
+      // #1 - constructor called when instance of this class is created
+      constructor(){
+        super();
+        // setup
+      }
+      
+      // #2 - called when the component is inserted into the DOM
+      connectedCallback(){
+        // draw page
+        this.render();
+        // we could also hookup some JavaScript to DOM events
+      }
+      
+      // #3 - called when the component is removed from the DOM
+      disconnectedCallback(){
+        // a good place to clean up, remove event listeners, etc ...
+      }
+      
+      // #4 - this lifecycle method is invoked each time one of the component's "watched" attributes changes
+      attributeChangedCallback(attributeName, oldVal, newVal){
+        console.log(attributeName, oldVal, newVal);
+        this.render();
+      }
+      
+      // #5 - here were specify for which attributes we want to be notified when their values change
+      static get observedAttributes(){
+        return ["data-year", "data-text"];
+      }
+            
+      // #6 - a helper method (could be named anything) to display the values of the attributes
+      render(){
+        // update the DOM in some way based on the value of the attributes
+      }
+      
+    } // end class
+    
+    // #7 - define our new custom element with `customElements.define()` so that we can use it on the page
+    customElements.define('my-element', MyElement);
+        
+</script>
+...
+<body>
+    <!-- Use it! -->
+    <my-element></my-element>
+    ...
+</body>
+</html>
