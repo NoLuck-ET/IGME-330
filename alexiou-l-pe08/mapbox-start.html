@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Map Start</title>
+	<script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+</head>
+<body>
+<div id='map' style='width: 400px; height: 300px;'></div>
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1Ijoibm8tbHVjayIsImEiOiJjbGdhMmF6ZWUwa3h1M3VwY3hkZ3NnYjg1In0.lnNacBxllCuK5iKPUdGZrg';
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/outdoors-v11'
+  });
+  map.setZoom(13);
+  map.setCenter([-77.675,43.083848]); // note the order - it's longitude,latitude - which is opposite of Google Maps
+  // Add zoom and rotation controls to the map.
+  map.addControl(new mapboxgl.NavigationControl());
+  // map.setStyle('mapbox://styles/mapbox/satellite-v9');
+</script>
+</body>
+</html>
