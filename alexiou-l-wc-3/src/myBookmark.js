@@ -23,14 +23,14 @@ const template = document.createElement("template");
                 line-height:normal;
             }
         </style>
-        <div class="has-background-link pl-1">
+        <div class="has-background-link pl-1 pr-1">
             <span id="link" class="is-family-sans-serif">
                 <a href="" class="has-text-light">???</a>
             </span>
             <span id="buttons">
                 <button class="button is-success is-small">
                     <span class="icon is-small">
-                        <i class="fas fa-check"></li>
+                        <i class="fas fa-check"></i>
                     </span>
                     <span>Favorite</span>
                 </button>
@@ -72,7 +72,7 @@ const template = document.createElement("template");
 
         // this method is invoked each time one of the component's "watched" attributes changes
         attributeChangedCallback(attributeName, oldValue, newValue) {
-            console.log(attributeName, oldValue, newValue);
+            //console.log(attributeName, oldValue, newValue);
             if(oldValue === newValue) return;
             if(attributeName == "data-text"){
                 this._text = newValue;
