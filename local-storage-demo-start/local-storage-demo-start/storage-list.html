@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="src/main.js" type="module"></script>
+  <title>Storage List</title>
+</head>
+<body>
+  <header class="hero is-small is-primary is-bold p-2">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">Storage List!</h1>
+        <h2 class="subtitle">Add stuff to your list, and see it later!</h2>
+      </div>
+    </div>
+  </header>
+  <div class="section has-background-info">
+    <div style="max-width:50%"> <!-- Begin "Form" -->
+      <div class="field">
+        <label class="label has-text-light">Thing to add to list</label>
+        <div class="control">
+          <input id="thing-text" class="input" type="text" 
+           placeholder="Name of thing" size="30"
+          >
+        </div>
+      </div>
+      <div class="control">
+        <button id="btn-add" class="button is-success">
+          Add to list
+        </button>
+      </div>
+    </div>  
+    
+  </div>
+  <div class="section">
+    <h2 class="subtitle is-5">Thing List</h2>
+    <ol id="display-list">
+      <li>???</li>
+    </ol>
+
+  </div>
+</body>
+</html>

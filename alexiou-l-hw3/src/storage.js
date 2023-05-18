@@ -1,9 +1,9 @@
 // Source: Professor
 const defaultData = {
     "version": .01, // not using, but we can see it in localStorage
-    "favorites": ["Cheese Whiz"]
+    "favorites": []
   },
-  storeName = "abc1234-list-data";
+  storeName = "lca9201-hw3-data";
   
   const readLocalStorage = () => {
     let allValues = null;

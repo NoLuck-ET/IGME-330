@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <title>Slot Demo</title>
+  <script>
+
+    // #1 - Component with 2 attributes
+    const template = document.createElement("template");
+    template.innerHTML = `
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <header class="hero is-info">
+      <div class="hero-body">
+        <h1 class="title"><slot name="my-title"></slot></h1>
+        <h2 class="subtitle"><slot name="my-subtitle"></slot></h2>
+      </div>
+    </header>
+    `;
+
+    class AppHeader extends HTMLElement{
+      constructor(){
+        super();
+        this.attachShadow({mode: "open"});
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
+      }
+
+      static get observedAttributes(){
+        return ["data-title","data-subtitle"];
+      }
+
+      attributeChangedCallback(name, oldValue, newValue){
+        this.render();
+      }
+
+      connectedCallback(){
+        this.render();
+      }
+
+      render(){
+        this.shadowRoot.querySelector(".title").innerHTML = this.dataset.title || "No title provided";
+        this.shadowRoot.querySelector(".subtitle").innerHTML = this.dataset.subtitle || "No subtitle provided";
+      }
+    } 
+
+    customElements.define('app-header', AppHeader);
+
+  // #2 - Component with 1 unnamed slot
+  customElements.define('app-header-1-slot', AppHeader1);
+  const template1 = document.createElement("template");
+    template.innerHTML = `
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <header class="hero is-info">
+      <div class="hero-body">
+        <h1 class="title">???</h1>
+        <h2 class="subtitle">???</h2>
+      </div>
+    </header>
+    `;
+
+    class AppHeader1 extends HTMLElement{
+      constructor(){
+        super();
+        this.attachShadow({mode: "open"});
+        this.shadowRoot.appendChild(template1.content.cloneNode(true));
+      }
+    }
+
+  // #3 - Component with 2 named slots
+  customElements.define('app-header-2-slots', AppHeader2);
+  const template2 = document.createElement("template");
+    template.innerHTML = `
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <header class="hero is-info">
+      <div class="hero-body">
+        <h1 class="title">???</h1>
+        <h2 class="subtitle">???</h2>
+      </div>
+    </header>
+    `;
+
+    class AppHeader2 extends HTMLElement{
+      constructor(){
+        super();
+        this.attachShadow({mode: "open"});
+        this.shadowRoot.appendChild(template2.content.cloneNode(true));
+      }
+    }
+  </script>
+</head>
+<body>
+  <app-header data-title="Slot Demo" data-subtitle="This is using attributes, not slots"></app-header>
+  
+  <hr>
+  
+  <app-header-1-slot>This is using a single slot</app-header-1-slot>
+  
+  <hr>
+  
+  <app-header-2-slots>
+    <span slot="my-title">Slot Demo!</span>
+		<span slot="my-subtitle">Now with 2 named slots!</span>
+  </app-header-2-slots>
+</body>
+</html>

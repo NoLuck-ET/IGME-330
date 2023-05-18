@@ -101,7 +101,7 @@ const template = document.createElement("template");
         // helper method
         render(){
             //this.innerHTML = `<span><a href="${this._url}" title="${this._comments}">${this._text}</a></span>`;
-            this.innerHTML = `<span><a target="_blank" href="${this._url}" title="${this._comments}">${this._text}</a></span>`;
+            this.innerHTML = `<span><a href="${this._url}" title="${this._comments}" target="_blank">${this._text}</a></span>`;
 
             // Is template loaded?
             let a = this.shadowRoot.querySelector("a");
