@@ -28,13 +28,13 @@ const template = document.createElement("template");
                 <a href="" class="has-text-light">???</a>
             </span>
             <span id="buttons">
-                <button class="button is-success is-small">
+                <button class="button is-success is-small" disabled>
                     <span class="icon is-small">
                         <i class="fas fa-check"></i>
                     </span>
                     <span>Favorite</span>
                 </button>
-                <button class="button is-warning is-small">
+                <button class="button is-warning is-small" id="delete">
                     <span>Delete</span>
                     <span class="icon is-small">
                         <i class="fas fa-times"></i>
@@ -68,6 +68,17 @@ const template = document.createElement("template");
 
         // called when the component is inserted into the DOM
         connectedCallback(){
+            const defaultCallback = () => console.log(`this._callback is not defined for ${this.tagName}`);
+            this.callback = this.callback || defaultCallback;
+            
+            // Attatches a callback to the delete button
+            this.shadowRoot.querySelector(".is-warning").onclick = () => {
+                //tells us what we clicked
+                console.log(`clicked. this=${this.tagName}`);
+                //removes the element
+                this.parentElement.remove();
+                this.callback(this.deleteBookmark);
+            };
             this.render();
         }
 

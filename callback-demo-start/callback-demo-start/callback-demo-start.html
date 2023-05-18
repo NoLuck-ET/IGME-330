@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <title>Callback Demo - start</title>
+  <style>
+    .column{
+      min-height: 200px;
+    }
+    ol{
+      list-style-type: upper-roman;
+      list-style-position: outside;
+    }
+    li>ol{
+      list-style-type: lower-alpha;
+      list-style-position: inside;
+    }
+  </style>
+  <script src="src/main.js" type="module"></script>
+</head>
+<body>
+  <div class="columns mb-0">
+    <div id="column-left" class="column section has-background-success">
+      ???
+    </div>
+    <div id="column-right" class="column section has-background-warning">
+      Just a column - nothing else going on over here!
+    </div>
+  </div>
+  <div class="section has-background-grey-lighter mt-0">
+    <ol>
+      <li>This example demos one way for a component to call methods that are defined in another JS script</li>
+      <li>In this case, we want to have the <b>Hello</b> and <b>Goodbye</b> buttons of the <kbd>&lt;app-header></kbd> component call a specific method in <b>main.js</b> - <kbd>buttonCallback()</kbd></li>
+      <li><b>main.js</b> is all done for you, so what you need to do is to go ahead and modify <kbd>AppHeader</kbd> so that
+        <ol>
+          <li>Clicking <kbd>#btn-hello</kbd> invokes the callback function and passes in (to that function) the <kbd>greeting</kbd> property of the component</li>
+          <li>Clicking <kbd>#btn-goodbye</kbd> invokes the callback function and passes in (to that function) the <kbd>farewell</kbd> and <kbd>specialNumber</kbd> properties of the component</li>
+        </ol>
+      </li>
+    </ol>
+  </div>
+</body>
+</html>
